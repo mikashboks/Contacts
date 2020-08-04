@@ -37,11 +37,11 @@ public final class Contacts {
      *
      * @return  A new Query object.
      */
-    public static Query getQuery() {
+    public static <T>Query getQuery() {
         if (Contacts.context == null) {
             throw new IllegalStateException("Contacts library not initialized");
         }
 
-        return new Query(context);
+        return new Query<T>(context);
     }
 }
