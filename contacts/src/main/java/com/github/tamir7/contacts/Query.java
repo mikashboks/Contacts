@@ -38,7 +38,7 @@ public final class Query<T> {
     private final Map<String, Where> mimeWhere = new HashMap<>();
     private Where defaultWhere = null;
     private Set<Contact.Field> include = new HashSet<>();
-    private List<Query> innerQueries;
+    private List<Query<T>> innerQueries;
     private Contact.Field sortOrderField = Contact.Field.SortKey;
     private SortOrderType sortOrderType = SortOrderType.ASC;
     private ContactTransformer<T> transformer;
@@ -55,7 +55,7 @@ public final class Query<T> {
      * @param value The substring that the value must contain.
      * @return this, so you can chain this call.
      */
-    public Query whereContains(Contact.Field field, Object value) {
+    public Query<T> whereContains(Contact.Field field, Object value) {
         addNewConstraint(field, Where.contains(field.getColumn(), value));
         return this;
     }
@@ -67,7 +67,7 @@ public final class Query<T> {
      * @param value The substring that the value must start with.
      * @return this, so you can chain this call.
      */
-    public Query whereStartsWith(Contact.Field field, Object value) {
+    public Query<T> whereStartsWith(Contact.Field field, Object value) {
         addNewConstraint(field, Where.startsWith(field.getColumn(), value));
         return this;
     }
@@ -79,7 +79,7 @@ public final class Query<T> {
      * @param value The value that the field value must be equal to.
      * @return this, so you can chain this call.
      */
-    public Query whereEqualTo(Contact.Field field, Object value) {
+    public Query<T> whereEqualTo(Contact.Field field, Object value) {
         addNewConstraint(field, Where.equalTo(field.getColumn(), value));
         return this;
     }
@@ -92,7 +92,7 @@ public final class Query<T> {
      * @param value The value that the field value must be NOT equal to.
      * @return this, so you can chain this call.
      */
-    public Query whereNotEqualTo(Contact.Field field, Object value) {
+    public Query<T> whereNotEqualTo(Contact.Field field, Object value) {
         addNewConstraint(field, Where.notEqualTo(field.getColumn(), value));
         return this;
     }
@@ -102,7 +102,7 @@ public final class Query<T> {
      *
      * @return this, so you can chain this call.
      */
-    public Query hasPhoneNumber() {
+    public Query<T> hasPhoneNumber() {
         defaultWhere = addWhere(defaultWhere, Where.notEqualTo(ContactsContract.Data.HAS_PHONE_NUMBER, 0));
         return this;
     }
@@ -116,7 +116,7 @@ public final class Query<T> {
      * @param queries The list of Queries to 'or' together.
      * @return A query that is the 'or' of the passed in queries.
      */
-    public Query or(List<Query> queries) {
+    public Query<T> or(List<Query<T>> queries) {
         innerQueries = queries;
         return this;
     }
@@ -127,18 +127,18 @@ public final class Query<T> {
      * @param fields The array of keys to include in the result.
      * @return this, so you can chain this call.
      */
-    public Query include(Contact.Field... fields) {
+    public Query<T> include(Contact.Field... fields) {
         include.clear();
         include.addAll(Arrays.asList(fields));
         return this;
     }
 
 
-    public Query sortOrder(Contact.Field field) {
+    public Query<T> sortOrder(Contact.Field field) {
         return sortOrder(field, SortOrderType.ASC);
     }
 
-    public Query sortOrder(Contact.Field field, SortOrderType type) {
+    public Query<T> sortOrder(Contact.Field field, SortOrderType type) {
         sortOrderField = field;
         sortOrderType = type;
         return this;
@@ -153,7 +153,7 @@ public final class Query<T> {
         List<Long> ids = new ArrayList<>();
 
         if (innerQueries != null) {
-            for (Query query : innerQueries) {
+            for (Query<T> query : innerQueries) {
                 ids.addAll(query.findInner());
             }
         } else {
@@ -291,7 +291,7 @@ public final class Query<T> {
         }
     }
 
-    public Query transform(ContactTransformer transformer) {
+    public Query<T> transform(ContactTransformer transformer) {
         this.transformer = transformer;
         return this;
     }
