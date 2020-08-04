@@ -150,7 +150,7 @@ public final class Contact {
         }
     }
 
-    Contact() {}
+    public Contact() {}
 
     void setId(Long id) {
         this.id = id;
@@ -334,7 +334,7 @@ public final class Contact {
     public String getCompanyTitle() {
         return companyTitle;
     }
-  
+
     /**
      * Gets the list of all websites the contact has
      *
@@ -360,7 +360,7 @@ public final class Contact {
     public String getNote() {
         return note;
     }
-  
+
     /**
      * Gets the list of addresses
      *
